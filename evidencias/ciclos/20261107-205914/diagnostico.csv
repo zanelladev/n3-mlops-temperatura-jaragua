@@ -1,0 +1,15 @@
+,antes,antes,antes,depois,depois,depois
+,ausentes,fora_da_faixa,outliers_z5,ausentes,fora_da_faixa,outliers_z5
+tmax,0.0,0.0,0.0,0.0,0.0,0.0
+tmin,0.0,0.0,0.0,0.0,0.0,0.0
+tmed,0.0,0.0,0.0,0.0,0.0,0.0
+umidade,0.0,0.0,22.0,0.0,0.0,22.0
+orvalho,0.0,0.0,0.0,0.0,0.0,0.0
+pressao,0.0,0.0,0.0,0.0,0.0,0.0
+nuvens,0.0,0.0,0.0,0.0,0.0,0.0
+vento_max,0.0,0.0,9.0,0.0,0.0,9.0
+vento_med,0.0,0.0,40.0,0.0,0.0,40.0
+rajada,0.0,0.0,15.0,0.0,0.0,15.0
+vento_dir,0.0,0.0,0.0,0.0,0.0,0.0
+chuva,0.0,0.0,1026.0,0.0,0.0,1026.0
+radiacao,0.0,0.0,0.0,0.0,0.0,0.0
