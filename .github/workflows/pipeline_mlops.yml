@@ -1,0 +1,122 @@
+name: pipeline-mlops
+
+# Um único workflow para o ciclo inteiro, em sequência e sem paralelismo:
+# dados novos -> ETL -> votação de features -> treino de A e B -> eleição e promoção
+# -> previsões -> monitoramento de drift -> estado salvo no repositório.
+on:
+  schedule:
+    - cron: "17 11 * * *"   # todo dia às 11:17 UTC (08:17 em Brasília)
+  workflow_dispatch:         # para depuração
+    inputs:
+      data_limite:
+        description: "Opcional (AAAA-MM-DD): só ingerir dados até esta data, para demonstrar a chegada de um lote"
+        required: false
+        default: ""
+      testar_alerta:
+        description: "Abrir a issue de alerta mesmo sem drift, para testar o canal de notificação"
+        type: boolean
+        default: false
+
+permissions:
+  contents: write   # commitar o estado do ciclo (dados, MLflow, manifesto e evidências)
+  issues: write     # abrir a issue de alerta de drift
+
+concurrency:
+  group: pipeline-mlops
+  cancel-in-progress: false
+
+jobs:
+  ciclo:
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    steps:
+      - name: Obter código e estado persistente (data/raw, mlflow.db, mlartefatos, manifesto)
+        uses: actions/checkout@v7
+
+      - uses: actions/setup-python@v7
+        with:
+          python-version: "3.12"
+          cache: pip
+
+      - name: Instalar dependências
+        run: pip install -r requirements.txt
+
+      - name: Executar os notebooks 01 a 06
+        id: pipeline
+        env:
+          DATA_LIMITE: ${{ inputs.data_limite }}
+        run: |
+          executar() {
+            jupyter nbconvert --to notebook --execute "notebooks/$1.ipynb" \
+              --output-dir executados --ExecutePreprocessor.timeout=1800
+          }
+          executar 01_etl
+          CICLO=$(cat data/processed/ciclo_atual.txt)
+          ESTADO="evidencias/ciclos/$CICLO/ciclo.json"
+          NOVOS=$(python -c "import json; print(json.load(open('$ESTADO'))['lote']['n_novos'])")
+          if [ "$NOVOS" = "0" ]; then
+            echo "::notice::Nenhum dia novo no Open-Meteo: ciclo encerrado sem treino."
+            echo "Nenhum dia novo no Open-Meteo: ciclo encerrado sem treino e sem mudança no modelo vigente." >> "$GITHUB_STEP_SUMMARY"
+            echo "novos=false" >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
+          for nb in 02_votacao_features 03_treino_competicao 04_selecao_promocao 05_previsoes 06_monitoramento; do
+            executar "$nb"
+          done
+          cp executados/*.ipynb "evidencias/ciclos/$CICLO/"
+          cat "evidencias/ciclos/$CICLO/resumo.md" >> "$GITHUB_STEP_SUMMARY"
+          echo "novos=true" >> "$GITHUB_OUTPUT"
+          echo "ciclo=$CICLO" >> "$GITHUB_OUTPUT"
+          echo "decisao=$(python -c "import json; print(json.load(open('$ESTADO'))['decisao']['decisao'])")" >> "$GITHUB_OUTPUT"
+
+      - name: Salvar o estado do ciclo no repositório
+        if: steps.pipeline.outputs.novos == 'true'
+        env:
+          CICLO: ${{ steps.pipeline.outputs.ciclo }}
+          DECISAO: ${{ steps.pipeline.outputs.decisao }}
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add data/raw mlflow.db mlartefatos models evidencias
+          git commit -m "ciclo $CICLO ($GITHUB_EVENT_NAME): $DECISAO"
+          git pull --rebase
+          git push
+
+      - name: Alerta de drift (issue no repositório)
+        if: steps.pipeline.outputs.novos == 'true' || inputs.testar_alerta
+        env:
+          GH_TOKEN: ${{ github.token }}
+          CICLO: ${{ steps.pipeline.outputs.ciclo }}
+          TESTAR_ALERTA: ${{ inputs.testar_alerta }}
+        run: |
+          ALERTA="evidencias/ciclos/$CICLO/alerta.md"
+          TITULO="Alerta de drift"
+          if [ "$TESTAR_ALERTA" = "true" ]; then
+            ALERTA=alerta_teste.md
+            TITULO="Alerta de drift (teste do canal)"
+            echo "Teste manual do canal de alerta (run $GITHUB_RUN_ID). Não houve drift real." > "$ALERTA"
+          fi
+          if [ ! -f "$ALERTA" ]; then
+            echo "Sem alerta neste ciclo."
+            exit 0
+          fi
+          NUM=$(gh issue list --state open --json number,title -q ".[] | select(.title == \"$TITULO\") | .number" | head -1)
+          if [ -n "$NUM" ]; then
+            gh issue comment "$NUM" --body-file "$ALERTA"
+          else
+            gh issue create --title "$TITULO" --body-file "$ALERTA"
+          fi
+
+      - name: Publicar o pacote do ciclo como artifact
+        if: always()
+        uses: actions/upload-artifact@v7
+        with:
+          name: ciclo-${{ github.run_number }}-${{ github.event_name }}
+          path: |
+            executados/
+            evidencias/
+            models/
+            mlflow.db
+            mlartefatos/
+          retention-days: 90
+          if-no-files-found: ignore

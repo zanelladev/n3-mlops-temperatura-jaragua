@@ -1,0 +1,67 @@
+# Configuração do pipeline. Tudo o que o fluxo decide sai daqui e foi fixado
+# antes do primeiro treino: dados, métrica, regra de votação, algoritmos e limiar de promoção.
+
+projeto:
+  nome: Temperatura máxima do dia seguinte em Jaraguá do Sul
+  semente: 42
+
+dados:
+  fonte: Open-Meteo Historical Weather API, reanálise ERA5-Seamless (licença CC BY 4.0)
+  url: https://archive-api.open-meteo.com/v1/archive
+  modelo: era5_seamless
+  cidade: Jaraguá do Sul (SC)
+  latitude: -26.48611
+  longitude: -49.06667
+  fuso: America/Sao_Paulo
+  inicio: "2010-01-01"
+  variaveis:                      # nome na API: nome no projeto
+    temperature_2m_max: tmax
+    temperature_2m_min: tmin
+    temperature_2m_mean: tmed
+    relative_humidity_2m_mean: umidade
+    dew_point_2m_mean: orvalho
+    pressure_msl_mean: pressao
+    cloud_cover_mean: nuvens
+    wind_speed_10m_max: vento_max
+    wind_speed_10m_mean: vento_med
+    wind_gusts_10m_max: rajada
+    wind_direction_10m_dominant: vento_dir
+    precipitation_sum: chuva
+    shortwave_radiation_sum: radiacao
+
+avaliacao:
+  alvo: temperatura máxima do dia seguinte (°C)
+  metrica_principal: mae
+  direcao: minimizar
+  validacao_dias: 365             # um ano inteiro, para a comparação passar por todas as estações
+  teste_dias: 30                  # o último mês, reservado para a avaliação final
+
+votacao:
+  metodo: maioria (pelo menos 2 dos 3 métodos)
+  k: 10                           # cada método vota nas suas 10 melhores
+  votos_minimos: 2
+  min_features: 6                 # se a maioria eleger menos que isso, completa pelo ranking médio
+  desempate: ranking_medio
+  rf_arvores: 200
+
+modelos:
+  A:
+    algoritmo: ridge
+    params: {alpha: 1.0}
+  B:
+    algoritmo: hist_gradient_boosting
+    params: {max_iter: 300, learning_rate: 0.05, max_leaf_nodes: 15, min_samples_leaf: 20, l2_regularization: 1.0}
+
+promocao:
+  limiar_melhoria: 0.02           # o desafiante precisa errar pelo menos 2% menos que o vigente
+  exigir_bater_persistencia: true # e precisa errar menos que "amanhã = hoje"
+
+monitoramento:                    # critério 10
+  janela_dias: 30
+  margem_sazonal_dias: 15
+  bins: 5
+  limiar_psi: 1.0                 # calibrado no backtest do notebook 06 (3% de alarmes em meses normais)
+  limiar_razao_mae: 1.5
+
+mlflow:
+  experimento: n3-tmax-jaragua
