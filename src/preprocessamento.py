@@ -27,7 +27,7 @@ def diagnostico(df):
     geral = {"linhas": len(df), "datas_duplicadas": int(df["data"].duplicated().sum()),
              "dias_faltando": len(calendario.difference(df["data"])),
              "tmin_maior_que_tmax": int((df["tmin"] > df["tmax"]).sum())}
-    return pd.DataFrame(linhas).T, geral
+    return pd.DataFrame.from_dict(linhas, orient="index"), geral
 
 
 def limpar(df):

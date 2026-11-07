@@ -19,9 +19,10 @@ def decidir(desafiante, vigente, persistencia, cfg):
     if vigente is None:
         return True, "primeiro ciclo: ainda não havia modelo vigente"
     melhoria = sinal * (vigente - desafiante) / abs(vigente)
+    texto = f"melhora de {melhoria * 100:.1f}% sobre o vigente".replace(".", ",")
     if melhoria >= limiar:
-        return True, f"melhora de {melhoria:.1%} sobre o vigente, acima do limiar de {limiar:.0%}"
-    return False, f"melhora de {melhoria:.1%} sobre o vigente, abaixo do limiar de {limiar:.0%}"
+        return True, f"{texto}, acima do limiar de {limiar:.0%}"
+    return False, f"{texto}, abaixo do limiar de {limiar:.0%}"
 
 
 def ler_manifesto():
