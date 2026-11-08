@@ -282,10 +282,19 @@ hoje = pd.Timestamp.now(tz="America/Sao_Paulo")
 
 if n_runs_schedule:
     agendadas = gh[gh["event"] == "schedule"]
-    texto_schedule = (f"Até agora foram {n_runs_schedule} execuções disparadas pelo próprio schedule, a primeira em "
-                      f"{dbr(pd.to_datetime(agendadas['createdAt'].iloc[0]).tz_convert('America/Sao_Paulo'))}, "
-                      f"e {n_agendados} delas trouxeram dia novo e fecharam um ciclo completo. As execuções agendadas "
-                      "que não encontraram dia novo terminaram depois do notebook 01, como previsto.")
+    primeira = dbr(pd.to_datetime(agendadas["createdAt"]).min().tz_convert("America/Sao_Paulo"))  # gh lista da mais nova
+    sem_dia_novo = (" As que não encontraram dia novo terminaram depois do notebook 01, como previsto."
+                    if n_runs_schedule > n_agendados else "")
+    if n_runs_schedule == 1:
+        texto_schedule = (f"Até agora houve 1 execução disparada pelo próprio schedule, em {primeira}, e ela "
+                          + ("trouxe dia novo e fechou um ciclo completo." if n_agendados else
+                             "não encontrou dia novo e terminou depois do notebook 01, como previsto."))
+    else:
+        fechados = ("nenhuma delas trouxe dia novo" if n_agendados == 0 else
+                    "1 delas trouxe dia novo e fechou um ciclo completo" if n_agendados == 1 else
+                    f"{n_agendados} delas trouxeram dia novo e fecharam um ciclo completo")
+        texto_schedule = (f"Até agora foram {n_runs_schedule} execuções disparadas pelo próprio schedule, a primeira em "
+                          f"{primeira}, e {fechados}.{sem_dia_novo}")
 else:
     texto_schedule = ("O schedule já está ativo no repositório, mas ainda não houve execução agendada até a geração "
                       "desta versão do relatório. As execuções abaixo foram disparadas manualmente.")
