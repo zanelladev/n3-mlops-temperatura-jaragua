@@ -1,0 +1,41 @@
+artifact_path: mlartefatos/models/m-b8a729e1ce1e49c785135178049ec8c7/artifacts
+flavors:
+  python_function:
+    env:
+      conda: conda.yaml
+      virtualenv: python_env.yaml
+    loader_module: mlflow.sklearn
+    model_path: model.skops
+    predict_fn: predict
+    python_version: 3.12.16
+  sklearn:
+    code: null
+    pickled_model: model.skops
+    serialization_format: skops
+    sklearn_version: 1.9.1
+    skops_trusted_types:
+    - numpy.dtype
+    - sklearn.ensemble._hist_gradient_boosting.predictor.TreePredictor
+is_signature_from_type_hint: false
+mlflow_version: 3.18.0
+model_id: m-b8a729e1ce1e49c785135178049ec8c7
+model_size_bytes: 34483
+model_uuid: m-b8a729e1ce1e49c785135178049ec8c7
+prompts: null
+run_id: 1d7b0870b4f84d929a25a390e5c473a1
+saved_input_example_info:
+  artifact_path: input_example.json
+  pandas_orient: split
+  serving_input_path: serving_input_example.json
+  type: dataframe
+signature:
+  inputs: '[{"type": "double", "name": "tmed", "required": true}, {"type": "double",
+    "name": "dia_ano_cos", "required": true}, {"type": "double", "name": "tmin", "required":
+    true}, {"type": "double", "name": "radiacao", "required": true}, {"type": "double",
+    "name": "vento_dir_cos", "required": true}, {"type": "double", "name": "tmax",
+    "required": true}, {"type": "double", "name": "pressao_delta", "required": true},
+    {"type": "double", "name": "rajada", "required": true}]'
+  outputs: '[{"type": "double", "required": true}]'
+  params: null
+type_hint_from_example: false
+utc_time_created: '2026-11-08 17:07:09.047820'

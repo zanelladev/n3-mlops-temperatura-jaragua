@@ -1,0 +1,147 @@
+{
+  "cycle_id": "20261108-170654",
+  "data_version": "dv-20261101-158b26fd",
+  "inicio_utc": "2026-11-08T17:06:54+00:00",
+  "evento": "schedule",
+  "github_run_id": "42503222028",
+  "lote": {
+    "n_novos": 1,
+    "arquivo": "lote_20261101_20261101.csv",
+    "inicio": "2026-11-01",
+    "fim": "2026-11-01",
+    "consultado": [
+      "2026-11-01",
+      "2026-11-08"
+    ]
+  },
+  "dados": {
+    "linhas": 6149,
+    "inicio": "2010-01-01",
+    "fim": "2026-11-01",
+    "lotes": [
+      "lote_20100101_20261024",
+      "lote_20261025_20261031",
+      "lote_20261101_20261101"
+    ]
+  },
+  "janelas": {
+    "treino": [
+      "2010-01-07",
+      "2025-10-01",
+      5747
+    ],
+    "validacao": [
+      "2025-10-02",
+      "2026-10-01",
+      365
+    ],
+    "teste": [
+      "2026-10-02",
+      "2026-10-31",
+      30
+    ],
+    "proximo": [
+      "2026-11-01",
+      "2026-11-01",
+      1
+    ]
+  },
+  "diagnostico": {
+    "antes": {
+      "linhas": 6149,
+      "datas_duplicadas": 0,
+      "dias_faltando": 0,
+      "tmin_maior_que_tmax": 0
+    },
+    "depois": {
+      "linhas": 6149,
+      "datas_duplicadas": 0,
+      "dias_faltando": 0,
+      "tmin_maior_que_tmax": 0
+    }
+  },
+  "votacao": {
+    "run_id": "816ceea8cbc24285a7fc42da208f687b",
+    "features": [
+      "tmed",
+      "dia_ano_cos",
+      "tmin",
+      "radiacao",
+      "vento_dir_cos",
+      "tmax",
+      "pressao_delta",
+      "rajada"
+    ],
+    "n": 8
+  },
+  "competicao": {
+    "A": {
+      "algoritmo": "ridge",
+      "run_id": "1d7b0870b4f84d929a25a390e5c473a1",
+      "model_uri": "models:/m-b8a729e1ce1e49c785135178049ec8c7",
+      "validacao": {
+        "mae": 1.944588626681626,
+        "rmse": 2.4600145699195077,
+        "r2": 0.7022910152200903
+      }
+    },
+    "B": {
+      "algoritmo": "hist_gradient_boosting",
+      "run_id": "6c67fe0372af4e30ad28a407b1235d08",
+      "model_uri": "models:/m-f57130be140040d8bb38c35a0a9c0f9b",
+      "validacao": {
+        "mae": 1.8968031081019148,
+        "rmse": 2.4167694497161025,
+        "r2": 0.712665993924376
+      }
+    },
+    "persistencia": {
+      "mae": 2.61013698630137,
+      "rmse": 3.3851691040498553,
+      "r2": 0.43626198740536515
+    },
+    "treino_ate": "2025-10-01",
+    "janela_validacao": [
+      "2025-10-02",
+      "2026-10-01"
+    ]
+  },
+  "decisao": {
+    "cycle_id": "20261108-170654",
+    "data_version": "dv-20261101-158b26fd",
+    "decisao": "mantido",
+    "motivo": "melhora de 0,0% sobre o vigente, abaixo do limiar de 2%",
+    "vencedor": "B",
+    "algoritmo_vencedor": "hist_gradient_boosting",
+    "run_id_vencedor": "6c67fe0372af4e30ad28a407b1235d08",
+    "run_id_vigente": "63182e0a1f344b449fc6b3baa7e97bb7",
+    "mae_vencedor": 1.8968031081019148,
+    "mae_vigente": 1.8974172224707215,
+    "mae_persistencia": 2.61013698630137,
+    "limiar_melhoria": 0.02,
+    "janela_validacao": [
+      "2025-10-02",
+      "2026-10-01"
+    ],
+    "run_id": "e4fad1545fa549e887ea75a00d2709cd"
+  },
+  "previsoes": {
+    "run_id": "bed6fe357cb44227b42713c79d6ba88f",
+    "mae_teste": 2.2625094187153256,
+    "mae_persistencia_teste": 2.4399999999999995,
+    "dias_teste": 30,
+    "data_alvo": "2026-11-02",
+    "previsto": 26.21
+  },
+  "monitoramento": {
+    "run_id": "f0ef9f4255d545c691c63d6b146a9da0",
+    "alerta": false,
+    "motivos": [],
+    "psi_sazonal_max": 0.6519582771841361,
+    "psi_anual_max": 0.8422959717656422,
+    "razao_mae": 1.2105715150804568,
+    "backtest_taxa_anual": 0.7172774869109948,
+    "backtest_taxa_sazonal": 0.031413612565445025
+  },
+  "fim_utc": "2026-11-08T17:07:38+00:00"
+}
