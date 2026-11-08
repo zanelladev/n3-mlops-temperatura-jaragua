@@ -520,9 +520,10 @@ modelos continuam guardados no MLflow.</p>
 <h2>Arquitetura do fluxo único</h2>
 <div class="figura">{diagrama()}</div>
 <p class="legenda">Figura 2. O único workflow (<code>.github/workflows/pipeline_mlops.yml</code>) e onde cada etapa lê e grava.</p>
-<p>Há um só workflow e um só job, com os passos em sequência: obter o código e o estado, instalar o
-<code>requirements.txt</code>, executar os notebooks 01 a 06 com <code>jupyter nbconvert --execute</code>, salvar o estado,
-abrir a issue de alerta se for o caso e publicar o pacote do ciclo como artifact. Os gatilhos são o schedule
+<p>Há um só workflow (<i>Previsão da máxima diária</i>) e um só job, com os passos em sequência: obter o código e o
+estado, instalar o <code>requirements.txt</code>, executar os notebooks 01 a 06, um por passo, com
+<code>jupyter nbconvert --execute</code>, escrever o resumo da execução na página do run, salvar o estado, abrir a issue
+de alerta se for o caso e publicar as evidências como artifact. Os gatilhos são o schedule
 (<code>17 11 * * *</code>, 08:17 em Brasília) e o <code>workflow_dispatch</code> para depuração. O
 <code>concurrency</code> impede duas execuções ao mesmo tempo.</p>
 <p><b>Persistência entre execuções.</b> Como o runner é descartado, o estado vive no próprio repositório: no fim de cada
@@ -541,9 +542,9 @@ runner. Na criação do experimento trocamos esse caminho por um relativo (<code
 <h2>Evidências de execução</h2>
 <p>{texto_schedule} A Tabela 4 lista as execuções do workflow e o que cada uma produziu. Os logs ficam na aba Actions
 do repositório; os notebooks executados de cada ciclo ficam em <code>evidencias/ciclos/&lt;cycle_id&gt;/</code>, junto
-com o <code>ciclo.json</code> e as tabelas do ciclo; e cada ciclo tem um commit
-<code>ciclo &lt;cycle_id&gt; (&lt;gatilho&gt;): &lt;decisão&gt;</code>.</p>
-<div class="bloco"><p class="legenda">Tabela 4. Execuções do workflow <code>pipeline-mlops</code> no GitHub Actions.</p>
+com o <code>ciclo.json</code>, as tabelas e o resumo do ciclo; e cada ciclo termina com um commit do bot que diz o
+gatilho, a data e a decisão.</p>
+<div class="bloco"><p class="legenda">Tabela 4. Execuções do workflow <i>Previsão da máxima diária</i> no GitHub Actions.</p>
 {html_tabela(tab_gh) if not tab_gh.empty else '<p>(gh indisponível ao gerar o relatório)</p>'}</div>
 <div class="bloco"><p class="legenda" style="margin-top:10pt">Tabela 5. Histórico dos ciclos completos (MAE em °C; A, B e vigente na validação do ciclo, teste para o vigente).</p>
 {html_tabela(tab_hist, "historico")}</div>

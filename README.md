@@ -57,7 +57,8 @@ Uma execução local abre um ciclo novo (com evento `local`) e altera `mlflow.db
 - O cron é `17 11 * * *` (UTC). O GitHub pode atrasar execuções agendadas em alguns minutos.
 - O ERA5 chega com uns 7 dias de atraso, então cada execução costuma trazer um dia novo. Se não vier nenhum, o workflow para depois do notebook 01 e não treina nada.
 - Se qualquer notebook falhar, o job para antes do commit: nada é promovido e o vigente continua o mesmo.
-- O estado persistente é o próprio repositório. Cada ciclo termina com um commit `ciclo <cycle_id> (<evento>): <decisão>`, e a execução seguinte começa do checkout desse commit, sem depender de arquivos do runner anterior. O pacote do ciclo também é publicado como artifact da execução.
+- O estado persistente é o próprio repositório. Cada ciclo termina com um commit do bot no formato `Execução agendada de DD/MM/AAAA: modelo mantido, máxima prevista de XX,X °C para DD/MM`, e a execução seguinte começa do checkout desse commit, sem depender de arquivos do runner anterior. As evidências também são publicadas como artifact da execução (`evidencias-execucao-N`).
+- A página de cada execução no Actions traz um resumo: a máxima prevista, a votação, a competição A × B, a decisão de promoção, as últimas previsões conferidas com o valor real e o drift. O mesmo texto fica em `evidencias/ciclos/<cycle_id>/resumo.md`.
 - `workflow_dispatch` aceita `data_limite` (ingerir só até uma data, usado para demonstrar a chegada de um lote) e `testar_alerta` (testar a issue de alerta).
 - As execuções ficam na aba Actions; o filtro `event:schedule` mostra só as agendadas.
 
