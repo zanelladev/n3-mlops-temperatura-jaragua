@@ -132,8 +132,8 @@ def resumo_md(estado):
         ultima = (f" Continua valendo a última previsão: **{_num(float(previsoes[-1]['previsto']))} °C para "
                   f"{_data(previsoes[-1]['data_alvo'])}**." if previsoes else "")
         return "\n".join([
-            "# 🌡️ Sem dados novos hoje", "",
-            f"O Open-Meteo ainda não publicou nenhum dia depois de {_data(estado['dados']['fim'])}, então a execução "
+            "# 🌡️ Sem dia novo no ERA5", "",
+            f"O ERA5 ainda não publicou nenhum dia depois de {_data(estado['dados']['fim'])}, então a execução "
             f"parou depois do ETL, sem treinar e sem trocar o modelo.{ultima}", "",
             rodape, ""])
 
@@ -141,13 +141,18 @@ def resumo_md(estado):
     c, d, p, m = estado["competicao"], estado["decisao"], estado["previsoes"], estado["monitoramento"]
     lote, dados, jan = estado["lote"], estado["dados"], estado["janelas"]
     promovido = d["decisao"] == "promovido"
-    novos = (f"1 dia novo ({_data(lote['inicio'])})" if lote["n_novos"] == 1 else
-             f"{_int(lote['n_novos'])} dias novos ({_data(lote['inicio'])} a {_data(lote['fim'])})")
+    novos = (f"1 dia novo no ERA5 ({_data(lote['inicio'])})" if lote["n_novos"] == 1 else
+             f"{_int(lote['n_novos'])} dias novos no ERA5 ({_data(lote['inicio'])} a {_data(lote['fim'])})")
+    pv = estado.get("provisorio")
     linhas = [
         f"# 🌡️ Máxima prevista para {_data(p['data_alvo'])}: {_num(p['previsto'])} °C",
         "",
         ("🆕 **Novo modelo promovido**" if promovido else "📌 **Modelo vigente mantido**")
         + (" · 🔴 **Alerta de drift**" if m["alerta"] else " · 🟢 **Sem alerta de drift**") + f" · {novos}",
+        "",
+        f"Previsão feita com os dados até {_data(jan['proximo'][0])}"
+        + (f": ERA5 até {_data(dados['fim'])} e, depois, dado provisório da API de previsão do Open-Meteo."
+           if pv else ", todos do ERA5."),
         "",
     ]
 
@@ -223,7 +228,8 @@ def resumo_md(estado):
         "",
         "| Dia | Previsto | Real | Erro |",
         "|:--|--:|--:|--:|",
-        *[linha_previsao(r, i == 0) for i, r in enumerate(reversed(previsoes[-4:]))],
+        *([linha_previsao(previsoes[-1], True)] if previsoes else []),
+        *[linha_previsao(r, False) for r in reversed([r for r in previsoes[:-1] if r["real"]][-3:])],
         "",
         f"O valor real chega com uns 7 dias de atraso. No teste (últimos {p['dias_teste']} dias) o vigente errou "
         f"{_num(p['mae_teste'], 2)} °C em média, contra {_num(p['mae_persistencia_teste'], 2)} °C da persistência.",
@@ -255,6 +261,8 @@ def resumo_md(estado):
         "",
         f"- **Versão dos dados:** `{estado['data_version']}` ({_int(dados['linhas'])} dias, de {_data(dados['inicio'])} "
         f"a {_data(dados['fim'])})",
+        *([f"- **Dado provisório:** de {_data(pv['inicio'])} a {_data(pv['fim'])}, da API de previsão do Open-Meteo, "
+           f"só na linha da previsão (`{caminho}provisorio.csv`)"] if pv else []),
         f"- **Janelas:** treino de {_data(jan['treino'][0])} a {_data(jan['treino'][1])} · validação de "
         f"{_data(jan['validacao'][0])} a {_data(jan['validacao'][1])} · teste de {_data(jan['teste'][0])} a "
         f"{_data(jan['teste'][1])}",

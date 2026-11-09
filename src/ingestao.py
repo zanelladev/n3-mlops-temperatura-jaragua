@@ -20,14 +20,15 @@ def carregar_bruto():
     return df.drop_duplicates("data", keep="last").sort_values("data").reset_index(drop=True)
 
 
-def buscar_api(cfg, inicio, fim):
+def buscar_api(cfg, inicio, fim, fonte=None):
     d = cfg["dados"]
+    fonte = fonte or d
     params = {"latitude": d["latitude"], "longitude": d["longitude"], "start_date": str(inicio),
               "end_date": str(fim), "daily": ",".join(d["variaveis"]), "timezone": d["fuso"],
-              "models": d["modelo"]}
+              "models": fonte["modelo"]}
     for tentativa in range(3):
         try:
-            resposta = requests.get(d["url"], params=params, timeout=120)
+            resposta = requests.get(fonte["url"], params=params, timeout=120)
             resposta.raise_for_status()
             break
         except requests.RequestException:
@@ -40,6 +41,16 @@ def buscar_api(cfg, inicio, fim):
     # Só entram dias completos, e só até o primeiro buraco, para o calendário não pular datas.
     incompleto = df.drop(columns="data").isna().any(axis=1)
     return df[~incompleto.cummax()]
+
+
+def buscar_recentes(cfg, ultimo):
+    """Dias depois do último do ERA5 até ontem, pela API de previsão do Open-Meteo. É dado provisório:
+    só monta a linha da previsão e não entra em data/raw, no treino, na validação nem no teste."""
+    inicio = (ultimo + timedelta(days=1)).date()
+    ontem = datetime.now(ZoneInfo(cfg["dados"]["fuso"])).date() - timedelta(days=1)
+    if os.environ.get("DATA_LIMITE") or inicio > ontem:  # na demonstração de lote, a previsão fica só no ERA5
+        return pd.DataFrame()
+    return buscar_api(cfg, inicio, ontem, cfg["dados"]["provisorio"])
 
 
 def atualizar(cfg):

@@ -56,6 +56,7 @@ Uma execução local abre um ciclo novo (com evento `local`) e altera `mlflow.db
 
 - O cron é `17 11 * * *` (UTC). O GitHub pode atrasar execuções agendadas em alguns minutos.
 - O ERA5 chega com uns 7 dias de atraso, então cada execução costuma trazer um dia novo. Se não vier nenhum, o workflow para depois do notebook 01 e não treina nada.
+- Para a previsão sair para o dia da execução, os dias que o ERA5 ainda não publicou vêm da API de previsão do Open-Meteo (dado provisório). Eles montam só a linha da previsão e ficam em `evidencias/ciclos/<cycle_id>/provisorio.csv`; treino, validação, teste e drift continuam só com ERA5, e a previsão é conferida com o ERA5 quando ele chega.
 - Se qualquer notebook falhar, o job para antes do commit: nada é promovido e o vigente continua o mesmo.
 - O estado persistente é o próprio repositório. Cada ciclo termina com um commit do bot no formato `Execução agendada de DD/MM/AAAA: modelo mantido, máxima prevista de XX,X °C para DD/MM`, e a execução seguinte começa do checkout desse commit, sem depender de arquivos do runner anterior. As evidências também são publicadas como artifact da execução (`evidencias-execucao-N`).
 - A página de cada execução no Actions traz um resumo: a máxima prevista, a votação, a competição A × B, a decisão de promoção, as últimas previsões conferidas com o valor real e o drift. O mesmo texto fica em `evidencias/ciclos/<cycle_id>/resumo.md`.
@@ -76,6 +77,7 @@ Abrir http://127.0.0.1:5000, experimento `n3-tmax-jaragua`. Cada ciclo tem os ru
 
 ```python
 import json
+import pandas as pd
 from src import ciclo, ingestao, preprocessamento
 
 cfg = ciclo.carregar_config()
@@ -83,8 +85,10 @@ mlflow = ciclo.configurar_mlflow(cfg)
 vigente = json.load(open("models/modelo_vigente.json"))
 modelo = mlflow.sklearn.load_model(vigente["model_uri"])      # Pipeline com imputação e escala
 
-dataset = preprocessamento.construir_atributos(preprocessamento.limpar(ingestao.carregar_bruto()))
-print(modelo.predict(dataset[vigente["features"]].tail(1)))   # máxima do dia seguinte ao último dado
+bruto = ingestao.carregar_bruto()
+provisorio = ingestao.buscar_recentes(cfg, bruto.data.max())     # dias que o ERA5 ainda não publicou
+proximo = preprocessamento.linha_da_previsao(bruto, provisorio)
+print(proximo.index[0] + pd.Timedelta(days=1), modelo.predict(proximo[vigente["features"]]))
 ```
 
 Para reproduzir um ciclo antigo, o `ciclo.json` dele lista os lotes de `data/raw` que existiam naquele momento.

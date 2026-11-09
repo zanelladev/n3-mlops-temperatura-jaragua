@@ -9,6 +9,10 @@ dados:
   fonte: Open-Meteo Historical Weather API, reanálise ERA5-Seamless (licença CC BY 4.0)
   url: https://archive-api.open-meteo.com/v1/archive
   modelo: era5_seamless
+  provisorio:                     # só os dias que o ERA5 ainda não publicou, para montar a linha da previsão
+    fonte: Open-Meteo Forecast API, dado provisório dos modelos de previsão (licença CC BY 4.0)
+    url: https://api.open-meteo.com/v1/forecast
+    modelo: best_match
   cidade: Jaraguá do Sul (SC)
   latitude: -26.48611
   longitude: -49.06667

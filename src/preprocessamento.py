@@ -87,9 +87,21 @@ def dividir(dataset, cfg):
             "teste": rotulado.iloc[-t:], "proximo": dataset.tail(1)}
 
 
+def linha_da_previsao(bruto, provisorio):
+    """Atributos do último dia com dado, de onde sai a previsão. Os dias provisórios (depois do último dia do ERA5)
+    entram só aqui, e por isso a previsão sai para o dia atual e não para uma semana atrás."""
+    serie = bruto.drop(columns="lote", errors="ignore")
+    if len(provisorio):
+        serie = pd.concat([serie, provisorio], ignore_index=True)
+    return construir_atributos(limpar(serie)).tail(1)
+
+
 def carregar(cfg):
     dataset = pd.read_csv(PROCESSED / "dataset.csv", index_col="data", parse_dates=True)
-    return dataset, dividir(dataset, cfg)
+    janelas = dividir(dataset, cfg)
+    if (PROCESSED / "proximo.csv").exists():  # gravado pelo notebook 01, já com os dias provisórios
+        janelas["proximo"] = pd.read_csv(PROCESSED / "proximo.csv", index_col="data", parse_dates=True)
+    return dataset, janelas
 
 
 def preparador():

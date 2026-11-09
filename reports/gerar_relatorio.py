@@ -412,8 +412,11 @@ do Sul (-26,49; -49,07), com a série diária desde 01/01/2010 agregada no fuso 
 <p><b>Atributos de origem.</b> Treze variáveis diárias: {', '.join(nomes_var.values())}. Sobre elas construímos os
 atributos da seção de ETL, chegando a {len(votos)} candidatas.</p>
 <p><b>Limitações dos dados.</b> Reanálise não é estação meteorológica: é um modelo que assimila observações numa grade
-de 9 a 25 km, então suaviza os extremos locais. O ERA5 chega com cerca de 7 dias de atraso, por isso o "dia seguinte"
-é o dia seguinte ao último dia disponível, e não o amanhã do calendário. É uma série de um ponto só, e os dias mais
+de 9 a 25 km, então suaviza os extremos locais. O ERA5 chega com cerca de 7 dias de atraso. Para a previsão sair para o
+dia da execução, buscamos os dias que ainda faltam na API de previsão do Open-Meteo, como dado provisório; eles montam só
+a linha da previsão e não entram no treino, na validação, no teste nem no monitoramento. Medimos o custo disso em
+09/11/2026: nos 46 dias de 16/09 a 31/10/2026, o vigente errou 2,78 °C com o dado provisório na entrada, contra 2,48 °C
+com o ERA5 e 3,03 °C da persistência. É uma série de um ponto só, e os dias mais
 recentes do ERA5 podem ser levemente revisados depois; guardamos o valor da primeira consulta para manter cada versão
 reproduzível.</p>
 
@@ -574,7 +577,8 @@ modelo, inclusive para a persistência. Pelo mesmo motivo o R² perde sentido em
 dentro de um mês é pequena, e por isso ele fica de fora aqui.</p>
 <div class="figura">{fig_teste}</div>
 <p class="legenda">Figura 3. Avaliação final no teste do último ciclo: máxima real, prevista pelo vigente e persistência.</p>
-<p>O notebook também prevê a máxima do dia seguinte ao último dado disponível e registra a previsão em
+<p>O notebook também prevê a máxima do dia seguinte ao último dia com dado, que na execução agendada é o próprio dia
+da execução, e registra a previsão em
 <code>evidencias/previsoes_diarias.csv</code>. Quando o dado real daquele dia chega, num ciclo seguinte, o erro é
 preenchido.{texto_diarias}</p>
 <div class="bloco"><p class="legenda">Tabela 6. Previsões do dia seguinte feitas pelo pipeline.</p>
@@ -613,8 +617,8 @@ grava <code>alerta.md</code> e o passo seguinte do YAML abre a issue "Alerta de 
 já estiver aberta), o que manda notificação para quem acompanha o repositório.</p>
 
 <h2>Limitações e conclusões</h2>
-<p><b>Limitações.</b> Os dados são de reanálise e de um ponto só, com atraso de uma semana, então o modelo não serve
-para a previsão de amanhã no calendário sem uma fonte observada em tempo real. Os hiperparâmetros são fixos no config,
+<p><b>Limitações.</b> Os dados são de reanálise e de um ponto só. Como o ERA5 atrasa uma semana, a linha da previsão usa dado
+provisório de modelos de previsão, que erra um pouco mais que o ERA5, e cada previsão só é conferida uma semana depois. Os hiperparâmetros são fixos no config,
 sem busca. O teste de 30 dias é pequeno e oscila com o tempo que fez no mês. Guardar o <code>mlflow.db</code> e os
 artefatos no Git funciona bem para um trabalho, mas o repositório cresce uns 2,5 MB por ciclo (quase tudo é o modelo
 B serializado); num projeto real usaríamos um servidor de tracking e um armazenamento de objetos. E o GitHub pode atrasar ou pular execuções agendadas em horários de pico.</p>
