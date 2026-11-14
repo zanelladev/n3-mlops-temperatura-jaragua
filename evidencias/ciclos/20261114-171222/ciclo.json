@@ -1,0 +1,159 @@
+{
+  "cycle_id": "20261114-171222",
+  "data_version": "dv-20261107-bd540832",
+  "inicio_utc": "2026-11-14T17:12:22+00:00",
+  "evento": "schedule",
+  "github_run_id": "43619743752",
+  "lote": {
+    "n_novos": 1,
+    "arquivo": "lote_20261107_20261107.csv",
+    "inicio": "2026-11-07",
+    "fim": "2026-11-07",
+    "consultado": [
+      "2026-11-07",
+      "2026-11-14"
+    ]
+  },
+  "dados": {
+    "linhas": 6155,
+    "inicio": "2010-01-01",
+    "fim": "2026-11-07",
+    "lotes": [
+      "lote_20100101_20261024",
+      "lote_20261025_20261031",
+      "lote_20261101_20261101",
+      "lote_20261102_20261102",
+      "lote_20261103_20261103",
+      "lote_20261104_20261104",
+      "lote_20261105_20261105",
+      "lote_20261106_20261106",
+      "lote_20261107_20261107"
+    ]
+  },
+  "janelas": {
+    "treino": [
+      "2010-01-07",
+      "2025-10-07",
+      5753
+    ],
+    "validacao": [
+      "2025-10-08",
+      "2026-10-07",
+      365
+    ],
+    "teste": [
+      "2026-10-08",
+      "2026-11-06",
+      30
+    ],
+    "proximo": [
+      "2026-11-13",
+      "2026-11-13",
+      1
+    ]
+  },
+  "diagnostico": {
+    "antes": {
+      "linhas": 6155,
+      "datas_duplicadas": 0,
+      "dias_faltando": 0,
+      "tmin_maior_que_tmax": 0
+    },
+    "depois": {
+      "linhas": 6155,
+      "datas_duplicadas": 0,
+      "dias_faltando": 0,
+      "tmin_maior_que_tmax": 0
+    }
+  },
+  "provisorio": {
+    "inicio": "2026-11-08",
+    "fim": "2026-11-13",
+    "dias": 6,
+    "fonte": "Open-Meteo Forecast API, dado provisório dos modelos de previsão (licença CC BY 4.0)"
+  },
+  "votacao": {
+    "run_id": "3e8706d7af50415d82570fac709a6862",
+    "features": [
+      "tmed",
+      "dia_ano_cos",
+      "tmin",
+      "vento_dir_cos",
+      "tmax",
+      "radiacao",
+      "pressao_delta",
+      "rajada"
+    ],
+    "n": 8
+  },
+  "competicao": {
+    "A": {
+      "algoritmo": "ridge",
+      "run_id": "695df30cd9dc49bea926b0b6904dcd35",
+      "model_uri": "models:/m-a2e1930e077c40fc80e3da97accdf3c5",
+      "validacao": {
+        "mae": 1.9488793471736605,
+        "rmse": 2.4676230033439515,
+        "r2": 0.6984229115519764
+      }
+    },
+    "B": {
+      "algoritmo": "hist_gradient_boosting",
+      "run_id": "e5e58a86eba64fc6bcd6a3dbfa4fa823",
+      "model_uri": "models:/m-252091ebe72f44e989e005877350e105",
+      "validacao": {
+        "mae": 1.920665117067796,
+        "rmse": 2.4405558072862736,
+        "r2": 0.7050025854360289
+      }
+    },
+    "persistencia": {
+      "mae": 2.612876712328767,
+      "rmse": 3.344179158863254,
+      "r2": 0.4461147553646382
+    },
+    "treino_ate": "2025-10-07",
+    "janela_validacao": [
+      "2025-10-08",
+      "2026-10-07"
+    ]
+  },
+  "decisao": {
+    "cycle_id": "20261114-171222",
+    "data_version": "dv-20261107-bd540832",
+    "decisao": "mantido",
+    "motivo": "melhora de -0,6% sobre o vigente, abaixo do limiar de 2%",
+    "vencedor": "B",
+    "algoritmo_vencedor": "hist_gradient_boosting",
+    "run_id_vencedor": "e5e58a86eba64fc6bcd6a3dbfa4fa823",
+    "run_id_vigente": "63182e0a1f344b449fc6b3baa7e97bb7",
+    "mae_vencedor": 1.920665117067796,
+    "mae_vigente": 1.9097769078575846,
+    "mae_persistencia": 2.612876712328767,
+    "limiar_melhoria": 0.02,
+    "janela_validacao": [
+      "2025-10-08",
+      "2026-10-07"
+    ],
+    "run_id": "5e36c3dbd98e4f3c800e163508879b2b"
+  },
+  "previsoes": {
+    "run_id": "8b3a48eb689d4af8b6c2b5ce3587b0f8",
+    "mae_teste": 2.1336303318514585,
+    "mae_persistencia_teste": 2.2533333333333334,
+    "dias_teste": 30,
+    "data_alvo": "2026-11-14",
+    "previsto": 27.02
+  },
+  "monitoramento": {
+    "run_id": "ebe8214be2ab4a9f8f9d99d994f0dc74",
+    "alerta": false,
+    "motivos": [],
+    "psi_sazonal_max": 0.23575245685948415,
+    "psi_anual_max": 0.6920820826572738,
+    "razao_mae": 1.0145796647683833,
+    "backtest_taxa_anual": 0.7172774869109948,
+    "backtest_taxa_sazonal": 0.031413612565445025
+  },
+  "fim_utc": "2026-11-14T17:12:52+00:00"
+}
