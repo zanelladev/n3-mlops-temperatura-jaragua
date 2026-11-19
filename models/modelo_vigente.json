@@ -21,21 +21,21 @@
   "promovido_em": "2026-11-07T20:55:08+00:00",
   "anteriores": [],
   "ultima_decisao": {
-    "cycle_id": "20261118-192602",
-    "data_version": "dv-20261111-742476c5",
+    "cycle_id": "20261119-193117",
+    "data_version": "dv-20261112-8c753dfe",
     "decisao": "mantido",
-    "motivo": "melhora de 0,4% sobre o vigente, abaixo do limiar de 2%",
+    "motivo": "melhora de -0,2% sobre o vigente, abaixo do limiar de 2%",
     "vencedor": "B",
     "algoritmo_vencedor": "hist_gradient_boosting",
-    "run_id_vencedor": "f1f660cb82a74bbb9fce66cdc27973aa",
+    "run_id_vencedor": "8f287e3548ca4e4daa303d00917d206f",
     "run_id_vigente": "63182e0a1f344b449fc6b3baa7e97bb7",
-    "mae_vencedor": 1.9157434783372063,
-    "mae_vigente": 1.922779656267487,
-    "mae_persistencia": 2.622465753424658,
+    "mae_vencedor": 1.9222531177226656,
+    "mae_vigente": 1.9175903083177779,
+    "mae_persistencia": 2.6156164383561644,
     "limiar_melhoria": 0.02,
     "janela_validacao": [
-      "2025-10-12",
-      "2026-10-11"
+      "2025-10-13",
+      "2026-10-12"
     ]
   }
 }
