@@ -1,0 +1,167 @@
+{
+  "cycle_id": "20261122-183427",
+  "data_version": "dv-20261115-4a4d32b5",
+  "inicio_utc": "2026-11-22T18:34:27+00:00",
+  "evento": "schedule",
+  "github_run_id": "45055745517",
+  "lote": {
+    "n_novos": 1,
+    "arquivo": "lote_20261115_20261115.csv",
+    "inicio": "2026-11-15",
+    "fim": "2026-11-15",
+    "consultado": [
+      "2026-11-15",
+      "2026-11-22"
+    ]
+  },
+  "dados": {
+    "linhas": 6163,
+    "inicio": "2010-01-01",
+    "fim": "2026-11-15",
+    "lotes": [
+      "lote_20100101_20261024",
+      "lote_20261025_20261031",
+      "lote_20261101_20261101",
+      "lote_20261102_20261102",
+      "lote_20261103_20261103",
+      "lote_20261104_20261104",
+      "lote_20261105_20261105",
+      "lote_20261106_20261106",
+      "lote_20261107_20261107",
+      "lote_20261108_20261108",
+      "lote_20261109_20261109",
+      "lote_20261110_20261110",
+      "lote_20261111_20261111",
+      "lote_20261112_20261112",
+      "lote_20261113_20261113",
+      "lote_20261114_20261114",
+      "lote_20261115_20261115"
+    ]
+  },
+  "janelas": {
+    "treino": [
+      "2010-01-07",
+      "2025-10-15",
+      5761
+    ],
+    "validacao": [
+      "2025-10-16",
+      "2026-10-15",
+      365
+    ],
+    "teste": [
+      "2026-10-16",
+      "2026-11-14",
+      30
+    ],
+    "proximo": [
+      "2026-11-21",
+      "2026-11-21",
+      1
+    ]
+  },
+  "diagnostico": {
+    "antes": {
+      "linhas": 6163,
+      "datas_duplicadas": 0,
+      "dias_faltando": 0,
+      "tmin_maior_que_tmax": 0
+    },
+    "depois": {
+      "linhas": 6163,
+      "datas_duplicadas": 0,
+      "dias_faltando": 0,
+      "tmin_maior_que_tmax": 0
+    }
+  },
+  "provisorio": {
+    "inicio": "2026-11-16",
+    "fim": "2026-11-21",
+    "dias": 6,
+    "fonte": "Open-Meteo Forecast API, dado provisório dos modelos de previsão (licença CC BY 4.0)"
+  },
+  "votacao": {
+    "run_id": "b3fee6d7bc9a434ea8d5ec65fd5df126",
+    "features": [
+      "tmed",
+      "dia_ano_cos",
+      "tmin",
+      "vento_dir_cos",
+      "tmax",
+      "radiacao",
+      "pressao_delta",
+      "rajada"
+    ],
+    "n": 8
+  },
+  "competicao": {
+    "A": {
+      "algoritmo": "ridge",
+      "run_id": "de5beff4965e4da7825d9a8812848a42",
+      "model_uri": "models:/m-8363365c68c342d7b86d50486b24bca6",
+      "validacao": {
+        "mae": 1.94057126558171,
+        "rmse": 2.4752598923812212,
+        "r2": 0.6942232334571468
+      }
+    },
+    "B": {
+      "algoritmo": "hist_gradient_boosting",
+      "run_id": "d6f8857b9c144f4f92fbb2fd443d8302",
+      "model_uri": "models:/m-dd29cae2603646e6a2b5f9131758c142",
+      "validacao": {
+        "mae": 1.8886913697002436,
+        "rmse": 2.4342438002339306,
+        "r2": 0.7042729715870353
+      }
+    },
+    "persistencia": {
+      "mae": 2.598904109589041,
+      "rmse": 3.334855360277654,
+      "r2": 0.4449694618366029
+    },
+    "treino_ate": "2025-10-15",
+    "janela_validacao": [
+      "2025-10-16",
+      "2026-10-15"
+    ]
+  },
+  "decisao": {
+    "cycle_id": "20261122-183427",
+    "data_version": "dv-20261115-4a4d32b5",
+    "decisao": "mantido",
+    "motivo": "melhora de 0,7% sobre o vigente, abaixo do limiar de 2%",
+    "vencedor": "B",
+    "algoritmo_vencedor": "hist_gradient_boosting",
+    "run_id_vencedor": "d6f8857b9c144f4f92fbb2fd443d8302",
+    "run_id_vigente": "63182e0a1f344b449fc6b3baa7e97bb7",
+    "mae_vencedor": 1.8886913697002436,
+    "mae_vigente": 1.9025340053788324,
+    "mae_persistencia": 2.598904109589041,
+    "limiar_melhoria": 0.02,
+    "janela_validacao": [
+      "2025-10-16",
+      "2026-10-15"
+    ],
+    "run_id": "89bf43264f7244f9b01105996111ff31"
+  },
+  "previsoes": {
+    "run_id": "9bdec83ead424a57aeb5e26947f8538e",
+    "mae_teste": 1.9736729110573779,
+    "mae_persistencia_teste": 2.3399999999999994,
+    "dias_teste": 30,
+    "data_alvo": "2026-11-22",
+    "previsto": 24.44
+  },
+  "monitoramento": {
+    "run_id": "be6114faec2f448888ab9539e44fee8e",
+    "alerta": false,
+    "motivos": [],
+    "psi_sazonal_max": 0.1445423400114516,
+    "psi_anual_max": 0.6250797123820215,
+    "razao_mae": 0.9752157032048197,
+    "backtest_taxa_anual": 0.7172774869109948,
+    "backtest_taxa_sazonal": 0.031413612565445025
+  },
+  "fim_utc": "2026-11-22T18:35:12+00:00"
+}
