@@ -1,0 +1,41 @@
+{
+  "cycle_id": "20261107-205440",
+  "data_version": "dv-20261024-622a2671",
+  "papel": "B",
+  "algoritmo": "hist_gradient_boosting",
+  "run_id": "63182e0a1f344b449fc6b3baa7e97bb7",
+  "model_uri": "models:/m-682a21a8a0644a8f8beffde7ac5e9312",
+  "features": [
+    "tmed",
+    "dia_ano_cos",
+    "tmin",
+    "radiacao",
+    "vento_dir_cos",
+    "tmax",
+    "pressao_delta",
+    "rajada"
+  ],
+  "metrica": "mae",
+  "valor_validacao": 1.8874931555199503,
+  "treino_ate": "2025-09-23",
+  "promovido_em": "2026-11-07T20:55:08+00:00",
+  "anteriores": [],
+  "ultima_decisao": {
+    "cycle_id": "20261126-201418",
+    "data_version": "dv-20261119-0aa68191",
+    "decisao": "mantido",
+    "motivo": "melhora de 0,4% sobre o vigente, abaixo do limiar de 2%",
+    "vencedor": "B",
+    "algoritmo_vencedor": "hist_gradient_boosting",
+    "run_id_vencedor": "c3564d4f39aa4a808773e1e1b33f6b40",
+    "run_id_vigente": "63182e0a1f344b449fc6b3baa7e97bb7",
+    "mae_vencedor": 1.9013516736845815,
+    "mae_vigente": 1.9096892055617551,
+    "mae_persistencia": 2.5936986301369864,
+    "limiar_melhoria": 0.02,
+    "janela_validacao": [
+      "2025-10-20",
+      "2026-10-19"
+    ]
+  }
+}
